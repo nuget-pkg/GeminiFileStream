@@ -52,11 +52,12 @@
   <ItemGroup>
     <None Include=".\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CoreObject" Version="2026.401.2240.41" />
-  </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+	  <PackageReference Include="Universal" Version="2026.406.345.17" />
+	  <PackageReference Include="GeminiZip" Version="2026.406.823.43" />
   </ItemGroup>
 </Project>
