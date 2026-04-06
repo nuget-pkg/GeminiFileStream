@@ -24,7 +24,7 @@ public static class GeminiTextEmbedder {
     private static long GetLength(string path) {
         try {
             if (path.StartsWith("http:") || path.StartsWith("https:")) {
-                using (var fs = new GeminPartialHTTPStream(path)) {
+                using (var fs = new GeminiPartialHTTPStream(path)) {
                     return fs.Length;
                 }
             }
@@ -66,7 +66,7 @@ public static class GeminiTextEmbedder {
             return new byte[0];
         }
         if (path.StartsWith("http:") || path.StartsWith("https:")) {
-            using (var fs = new GeminPartialHTTPStream(path)) {
+            using (var fs = new GeminiPartialHTTPStream(path)) {
                 long fileLen = fs.Length;
                 if (size > fileLen) {
                     size = fileLen;
@@ -91,7 +91,7 @@ public static class GeminiTextEmbedder {
             return new byte[0];
         }
         if (path.StartsWith("http:") || path.StartsWith("https:")) {
-            using (var fs = new GeminPartialHTTPStream(path)) {
+            using (var fs = new GeminiPartialHTTPStream(path)) {
                 long fileLen = fs.Length;
                 if (size > fileLen) {
                     size = fileLen;

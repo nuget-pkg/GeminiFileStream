@@ -24,44 +24,56 @@ using Universal;
 // ReSharper disable EmptyGeneralCatchClause
 // ReSharper disable once CheckNamespace
 namespace Universal;
-public static partial class GeminiOperatingSystem {
+
+public static partial class GeminiOperatingSystem
+{
     public static bool SilentFlag = false;
-    public static bool IsWindowsPlatform() {
+    public static bool IsWindowsPlatform()
+    {
 #if NETFRAMEWORK
         return Environment.OSVersion.Platform == PlatformID.Win32NT;
 #else
         return OperatingSystem.IsWindows();
 #endif
     }
-    public static int Add2(int a, int b) {
+    public static int Add2(int a, int b)
+    {
         return a + b;
     }
-    public static string ProfilePath() {
+    public static string ProfilePath()
+    {
         return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
             .Replace('/', Path.DirectorySeparatorChar);
     }
-    public static string ProfilePath(string appName) {
+    public static string ProfilePath(string appName)
+    {
         string baseFolder = ProfilePath();
         return $"{baseFolder}/{appName}".Replace('/', Path.DirectorySeparatorChar);
     }
-    public static string ProfilePath(string orgName, string appName) {
+    public static string ProfilePath(string orgName, string appName)
+    {
         string baseFolder = ProfilePath();
         return $"{baseFolder}/{appName}".Replace('/', Path.DirectorySeparatorChar);
     }
-    public static List<string> TextToLines(string text) {
+    public static List<string> TextToLines(string text)
+    {
         List<string> lines = [];
-        using (StringReader sr = new StringReader(text)) {
+        using (StringReader sr = new StringReader(text))
+        {
             string? line;
-            while ((line = sr.ReadLine()) != null) {
+            while ((line = sr.ReadLine()) != null)
+            {
                 lines.Add(line);
             }
         }
         return lines;
     }
-    public static string LimitStringLength(string s, int limit, string ellipsis = "...") {
+    public static string LimitStringLength(string s, int limit, string ellipsis = "...")
+    {
         UTF32Encoding enc = new UTF32Encoding();
         byte[] byteUtf32 = enc.GetBytes(s);
-        if (byteUtf32.Length <= limit * 4) {
+        if (byteUtf32.Length <= limit * 4)
+        {
             return s;
         }
         ArraySegment<byte> segment = new ArraySegment<byte>(byteUtf32, 0, limit * 4);
@@ -69,36 +81,46 @@ public static partial class GeminiOperatingSystem {
         string decodedString = enc.GetString(byteUtf32);
         return decodedString + ellipsis;
     }
-    public static Process? OpenUrl(string url) {
-        ProcessStartInfo pi = new ProcessStartInfo() {
+    public static Process? OpenUrl(string url)
+    {
+        ProcessStartInfo pi = new ProcessStartInfo()
+        {
             FileName = url,
             UseShellExecute = true,
         };
         return Process.Start(pi);
     }
-    public static string ZipDirectory(string dir, string? zipout = null, string comment = "") {
+    public static string ZipDirectory(string dir, string? zipout = null, string comment = "")
+    {
         dir = Path.GetFullPath(dir);
-        if (zipout == null) {
+        if (zipout == null)
+        {
             zipout = dir + ".zip";
         }
-        if (Directory.Exists(dir) && !string.IsNullOrWhiteSpace(dir) && !string.IsNullOrWhiteSpace(zipout)) {
-            try {
+        if (Directory.Exists(dir) && !string.IsNullOrWhiteSpace(dir) && !string.IsNullOrWhiteSpace(zipout))
+        {
+            try
+            {
                 using var zip = GeminiZipStorer.Create(zipout, comment); // true for stream
                 zip.EncodeUTF8 = true;
                 zip.ForceDeflating = true;
                 foreach (string listDir in
-                         Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly)) {
+                         Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly))
+                {
                     // Add folders with files to the archive
-                    try {
+                    try
+                    {
                         zip.AddDirectory(GeminiZipStorer.Compression.Deflate, listDir, string.Empty);
                     }
                     catch
                     {
                     }
                 }
-                foreach (string listFiles in Directory.EnumerateFiles(dir, "*.*", SearchOption.TopDirectoryOnly)) {
+                foreach (string listFiles in Directory.EnumerateFiles(dir, "*.*", SearchOption.TopDirectoryOnly))
+                {
                     // Add residual files in the current directory to the archive.
-                    try {
+                    try
+                    {
                         zip.AddFile(GeminiZipStorer.Compression.Deflate, listFiles, Path.GetFileName(listFiles));
                     }
                     catch
@@ -106,7 +128,8 @@ public static partial class GeminiOperatingSystem {
                     }
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
             }
         }
@@ -116,80 +139,102 @@ public static partial class GeminiOperatingSystem {
     //    Console.Error.Write($"Exit() was called with exitCode: {exitCoed}." + "\n");
     //    Environment.Exit(exitCoed);
     //}
-    public static string? FindHome(DirectoryInfo dir) {
+    public static string? FindHome(DirectoryInfo dir)
+    {
         FileInfo[] files = dir.GetFiles();
-        foreach (FileInfo file in files) {
-            if (file.Name == ".bashrc" || file.Name == ".profile") {
+        foreach (FileInfo file in files)
+        {
+            if (file.Name == ".bashrc" || file.Name == ".profile")
+            {
                 return dir.FullName;
             }
         }
         DirectoryInfo? parent = dir.Parent;
-        if (parent == null) {
+        if (parent == null)
+        {
             return null;
         }
         return FindHome(parent);
     }
-    public static string? FindGitRoot(string dir) {
+    public static string? FindGitRoot(string dir)
+    {
         return FindGitRoot(new DirectoryInfo(dir));
     }
-    public static string? FindGitRoot(DirectoryInfo dir) {
+    public static string? FindGitRoot(DirectoryInfo dir)
+    {
         DirectoryInfo[] files = dir.GetDirectories();
-        foreach (DirectoryInfo file in files) {
-            if (file.Name == ".git") {
+        foreach (DirectoryInfo file in files)
+        {
+            if (file.Name == ".git")
+            {
                 return dir.FullName;
             }
         }
         DirectoryInfo? parent = dir.Parent;
-        if (parent == null) {
+        if (parent == null)
+        {
             return null;
         }
         return FindGitRoot(parent);
     }
-    public static string GetCwd() {
+    public static string GetCwd()
+    {
         return Directory.GetCurrentDirectory();
     }
-    public static void SetCwd(string path) {
+    public static void SetCwd(string path)
+    {
         path = CygpathWindows(path);
-        if (!SilentFlag) {
+        if (!SilentFlag)
+        {
             Console.Error.WriteLine($"SetCwd(): {path}");
         }
         Prepare(path);
         Directory.SetCurrentDirectory(path);
     }
-    public static string GetFullPath(string path) {
+    public static string GetFullPath(string path)
+    {
         path = CygpathWindows(path);
         return Path.GetFullPath(path);
     }
-    public static string GetFileName(string path) {
+    public static string GetFileName(string path)
+    {
         path = CygpathWindows(path);
         return Path.GetFileName(path);
     }
-    public static string GetDirectoryName(string path) {
+    public static string GetDirectoryName(string path)
+    {
         path = CygpathWindows(path);
         return Path.GetDirectoryName(path)!;
     }
-    public static string GetBaseName(string path, bool strongAlgorithm) {
-        if (strongAlgorithm) {
-            try {
+    public static string GetBaseName(string path, bool strongAlgorithm)
+    {
+        if (strongAlgorithm)
+        {
+            try
+            {
                 path = path.Trim();
                 path = path.Replace("\\", "/");
                 var split = path.Split('/');
-                if (split.Length == 0) {
+                if (split.Length == 0)
+                {
                     return path;
                 }
                 return split[split.Length - 1];
             }
-            catch {
+            catch
+            {
                 return path;
             }
         }
         path = CygpathWindows(path);
         return Path.GetFileNameWithoutExtension(Path.GetFileName(path));
     }
-    public static Process? LaunchProcess(string exePath, string[] args, Dictionary<string, string>? vars = null) {
+    public static Process? LaunchProcess(string exePath, string[] args, Dictionary<string, string>? vars = null)
+    {
         exePath = CygpathWindows(exePath);
         var argList = "";
-        for (var i = 0; i < args.Length; i++) {
+        for (var i = 0; i < args.Length; i++)
+        {
             if (i > 0) argList += " ";
             if (args[i].Contains(" "))
                 argList += $"\"{args[i]}\"";
@@ -210,10 +255,13 @@ public static partial class GeminiOperatingSystem {
         if (!result) return null;
         return process;
     }
-    public static string GetProcessStdout(Encoding encoding, string exe, params string[] args) {
+    public static string GetProcessStdout(Encoding encoding, string exe, params string[] args)
+    {
         string cmdArgs = "";
-        for (int i = 0; i < args.Length; i++) {
-            if (i != 0) {
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (i != 0)
+            {
                 cmdArgs += " ";
             }
             cmdArgs += string.Format("\"{0}\"", args[i]);
@@ -231,12 +279,15 @@ public static partial class GeminiOperatingSystem {
         processStartInfo.UseShellExecute = false;
         processStartInfo.FileName = exe;
         processStartInfo.Arguments = cmdArgs;
-        process = new Process {
+        process = new Process
+        {
             StartInfo = processStartInfo,
             EnableRaisingEvents = true
         };
-        process.OutputDataReceived += delegate(object _, DataReceivedEventArgs e) {
-            if (!SilentFlag) {
+        process.OutputDataReceived += delegate (object _, DataReceivedEventArgs e)
+        {
+            if (!SilentFlag)
+            {
                 Console.Error.WriteLine(e.Data);
             }
             outputBuilder.Append(e.Data + "\n");
@@ -249,88 +300,110 @@ public static partial class GeminiOperatingSystem {
         output = output.Trim() + "\n";
         return output;
     }
-    public static string? FindExePath(string exe) {
+    public static string? FindExePath(string exe)
+    {
         string cwd = "";
         return FindExePath(exe, cwd);
     }
-    public static string? FindExePath(string exe, string cwd) {
+    public static string? FindExePath(string exe, string cwd)
+    {
         cwd = CygpathWindows(cwd);
         exe = Environment.ExpandEnvironmentVariables(exe);
-        if (Path.IsPathRooted(exe)) {
-            if (!File.Exists(exe)) {
+        if (Path.IsPathRooted(exe))
+        {
+            if (!File.Exists(exe))
+            {
                 return null;
             }
             return Path.GetFullPath(exe);
         }
         string pathList = Environment.GetEnvironmentVariable("PATH") ?? "";
         pathList = $"{cwd};{pathList}";
-        foreach (string test in pathList.Split(';')) {
+        foreach (string test in pathList.Split(';'))
+        {
             string path = test.Trim();
-            if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, exe))) {
+            if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, exe)))
+            {
                 return Path.GetFullPath(Path.Combine(path, exe));
             }
             string baseName = Path.GetFileNameWithoutExtension(exe);
-            if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, $"{baseName}.bin", exe))) {
+            if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, $"{baseName}.bin", exe)))
+            {
                 return Path.GetFullPath(Path.Combine(path, $"{baseName}.bin", exe));
             }
         }
         return null;
     }
-    public static string? FindExePath(string exe, Assembly assembly) {
+    public static string? FindExePath(string exe, Assembly assembly)
+    {
         int bit = IntPtr.Size * 8;
         string? cwd = AssemblyDirectory(assembly);
-        if (cwd == null) {
+        if (cwd == null)
+        {
             return null;
         }
         string? result = FindExePath(exe, cwd);
-        if (result == null) {
+        if (result == null)
+        {
             result = FindExePath(exe, $"{cwd}\\{bit}bit");
-            if (result == null) {
+            if (result == null)
+            {
                 cwd = Path.Combine(cwd, "assets");
                 result = FindExePath(exe, $"{cwd}\\{bit}bit");
             }
         }
         return result;
     }
-    public static string? FindExeRecursive(string rootDirectory, string exeName) {
-        try {
+    public static string? FindExeRecursive(string rootDirectory, string exeName)
+    {
+        try
+        {
             IEnumerable<string> exeFiles =
                 Directory.EnumerateFiles(rootDirectory, "*.exe", SearchOption.AllDirectories);
             //Debug(exeFiles, title: "files");
-            foreach (string file in exeFiles) {
+            foreach (string file in exeFiles)
+            {
                 //Debug(file);
                 string baseName = GeminiOperatingSystem.GetBaseName(file, strongAlgorithm: true);
                 //Debug(baseName, title: "baseName");
-                if (string.Equals(baseName, exeName, StringComparison.CurrentCultureIgnoreCase)) {
+                if (string.Equals(baseName, exeName, StringComparison.CurrentCultureIgnoreCase))
+                {
                     return file;
                 }
             }
         }
-        catch (UnauthorizedAccessException ex) {
+        catch (UnauthorizedAccessException ex)
+        {
             Console.Error.WriteLine($"Access denied to one or more directories: {ex.Message}");
         }
-        catch (DirectoryNotFoundException ex) {
+        catch (DirectoryNotFoundException ex)
+        {
             Console.Error.WriteLine($"Directory not found: {ex.Message}");
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
         return null;
     }
-    public static string? AssemblyDirectory(Assembly assembly) {
+    public static string? AssemblyDirectory(Assembly assembly)
+    {
 #pragma warning disable SYSLIB0012
         string? codeBase = assembly.CodeBase;
 #pragma warning restore SYSLIB0012
-        if (codeBase == null) {
+        if (codeBase == null)
+        {
             return null;
         }
         UriBuilder uri = new UriBuilder(codeBase);
         string path = Uri.UnescapeDataString(uri.Path);
         return Path.GetDirectoryName(path)!;
     }
-    public static string CygpathWindows(string path) {
+    public static string CygpathWindows(string path)
+    {
         path = path.Replace(@"\", "/");
-        if (Environment.OSVersion.Platform != PlatformID.Win32NT) {
+        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+        {
             return path;
         }
         List<string>? m = FindFirstMatch(
@@ -340,53 +413,66 @@ public static partial class GeminiOperatingSystem {
             "^/mnt/([a-zA-z])[/]?$",
             "^/mnt/([a-zA-z])/(.+)$"
         );
-        if (m != null) {
-            if (m.Count == 2) {
+        if (m != null)
+        {
+            if (m.Count == 2)
+            {
                 path = $"{m[1].ToUpper()}:/";
             }
-            else if (m.Count == 3) {
+            else if (m.Count == 3)
+            {
                 path = $"{m[1].ToUpper()}:/{m[2]}";
             }
         }
         path = path.Replace('/', Path.DirectorySeparatorChar);
         return path;
     }
-    public static string[] ExpandWildcard(string path) {
+    public static string[] ExpandWildcard(string path)
+    {
         path = CygpathWindows(path);
         string dir = Path.GetDirectoryName(path)!;
-        if (string.IsNullOrEmpty(dir)) {
+        if (string.IsNullOrEmpty(dir))
+        {
             dir = ".";
         }
         string fname = Path.GetFileName(path);
         string[] files = Directory.GetFileSystemEntries(dir, fname);
         List<string> result = [];
-        for (int i = 0; i < files.Length; i++) {
+        for (int i = 0; i < files.Length; i++)
+        {
             result.Add(Path.GetFullPath(files[i]));
         }
         return result.ToArray();
     }
-    public static string[] ExpandWildcardList(params string[] pathList) {
+    public static string[] ExpandWildcardList(params string[] pathList)
+    {
         pathList = (string[])pathList.Clone();
-        for (int i = 0; i < pathList.Length; i++) {
+        for (int i = 0; i < pathList.Length; i++)
+        {
             pathList[i] = CygpathWindows(pathList[i]);
         }
         List<string> result = [];
-        for (int i = 0; i < pathList.Length; i++) {
+        for (int i = 0; i < pathList.Length; i++)
+        {
             string[] files = ExpandWildcard(pathList[i]);
             result.AddRange(files.ToList());
         }
         return result.ToArray();
     }
-    public static void FreeHGlobal(IntPtr x) {
+    public static void FreeHGlobal(IntPtr x)
+    {
         Marshal.FreeHGlobal(x);
     }
-    public static IntPtr StringToWideAddr(string s) {
+    public static IntPtr StringToWideAddr(string s)
+    {
         return Marshal.StringToHGlobalUni(s);
     }
-    public static string WideAddrToString(IntPtr s) {
+    public static string WideAddrToString(IntPtr s)
+    {
         return Marshal.PtrToStringUni(s)!;
     }
-    public static IntPtr StringToUTF8Addr(string s) {
+    public static IntPtr StringToUTF8Addr(string s)
+    {
         int len = Encoding.UTF8.GetByteCount(s);
         byte[] buffer = new byte[len + 1];
         Encoding.UTF8.GetBytes(s, 0, s.Length, buffer, 0);
@@ -394,17 +480,21 @@ public static partial class GeminiOperatingSystem {
         Marshal.Copy(buffer, 0, nativeUtf8, buffer.Length);
         return nativeUtf8;
     }
-    public static string UTF8AddrToString(IntPtr s) {
+    public static string UTF8AddrToString(IntPtr s)
+    {
         int len = 0;
-        while (Marshal.ReadByte(s, len) != 0) {
+        while (Marshal.ReadByte(s, len) != 0)
+        {
             ++len;
         }
         byte[] buffer = new byte[len];
         Marshal.Copy(s, buffer, 0, buffer.Length);
         return Encoding.UTF8.GetString(buffer);
     }
-    public static IntPtr ReassignThreadLocalStringPointer(ThreadLocal<IntPtr> ptr, string s) {
-        if (ptr.Value != IntPtr.Zero) {
+    public static IntPtr ReassignThreadLocalStringPointer(ThreadLocal<IntPtr> ptr, string s)
+    {
+        if (ptr.Value != IntPtr.Zero)
+        {
             FreeHGlobal(ptr.Value);
             ptr.Value = IntPtr.Zero;
         }
@@ -412,17 +502,22 @@ public static partial class GeminiOperatingSystem {
         return ptr.Value;
     }
     public static int RunToConsole(Encoding encoding, string exePath, string[] args,
-        Dictionary<string, string>? vars = null) {
+        Dictionary<string, string>? vars = null)
+    {
         exePath = CygpathWindows(exePath);
         string argList = "";
-        for (int i = 0; i < args.Length; i++) {
-            if (i > 0) {
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (i > 0)
+            {
                 argList += " ";
             }
-            if (args[i].Contains(" ")) {
+            if (args[i].Contains(" "))
+            {
                 argList += $"\"{args[i]}\"";
             }
-            else {
+            else
+            {
                 argList += args[i];
             }
         }
@@ -435,9 +530,11 @@ public static partial class GeminiOperatingSystem {
         process.StartInfo.CreateNoWindow = true;
         process.StartInfo.FileName = exePath;
         process.StartInfo.Arguments = argList;
-        if (vars != null) {
+        if (vars != null)
+        {
             Dictionary<string, string>.KeyCollection keys = vars.Keys;
-            foreach (string key in keys) {
+            foreach (string key in keys)
+            {
                 process.StartInfo.EnvironmentVariables[key] = vars[key];
             }
         }
@@ -452,22 +549,27 @@ public static partial class GeminiOperatingSystem {
         process.CancelErrorRead();
         return process.ExitCode;
     }
-    public static byte[]? ToUtf8Bytes(string? s) {
-        if (s is null) {
+    public static byte[]? ToUtf8Bytes(string? s)
+    {
+        if (s is null)
+        {
             return null;
         }
         byte[] bytes = Encoding.UTF8.GetBytes(s);
         return bytes;
     }
-    public static void Prepare(string dirPath) {
+    public static void Prepare(string dirPath)
+    {
         dirPath = CygpathWindows(dirPath);
         Directory.CreateDirectory(dirPath);
     }
-    public static void PrepareForFile(string filePath) {
+    public static void PrepareForFile(string filePath)
+    {
         filePath = CygpathWindows(filePath);
         Prepare(Path.GetDirectoryName(filePath)!);
     }
-    public static void DownloadBinaryFromUrl(string url, string destinationPath) {
+    public static void DownloadBinaryFromUrl(string url, string destinationPath)
+    {
         destinationPath = CygpathWindows(destinationPath);
         PrepareForFile(destinationPath);
 #pragma warning disable SYSLIB0014
@@ -477,22 +579,28 @@ public static partial class GeminiOperatingSystem {
         WebResponse objResponse = objRequest.GetResponse();
         byte[] buffer = new byte[32768];
         using Stream? input = objResponse.GetResponseStream();
-        if (input == null) {
+        if (input == null)
+        {
             return;
         }
         using FileStream output = new FileStream(destinationPath, FileMode.CreateNew);
         int bytesRead;
-        while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0) {
+        while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
+        {
             output.Write(buffer, 0, bytesRead);
         }
     }
-    public static List<string>? FindFirstMatch(string s, params string[] patterns) {
-        foreach (string pattern in patterns) {
+    public static List<string>? FindFirstMatch(string s, params string[] patterns)
+    {
+        foreach (string pattern in patterns)
+        {
             Regex r = new Regex(pattern);
             Match m = r.Match(s);
-            if (m.Success) {
+            if (m.Success)
+            {
                 List<string> groups = [];
-                for (int i = 0; i < m.Groups.Count; i++) {
+                for (int i = 0; i < m.Groups.Count; i++)
+                {
                     groups.Add(m.Groups[i].Value);
                 }
                 return groups;
@@ -500,93 +608,117 @@ public static partial class GeminiOperatingSystem {
         }
         return null;
     }
-    public static Dictionary<string, string> QueryParameterDictionary(string url) {
+    public static Dictionary<string, string> QueryParameterDictionary(string url)
+    {
         Uri uri = new Uri(url);
         string queryString = uri.Query;
         NameValueCollection queryParameters = HttpUtility.ParseQueryString(queryString);
         Dictionary<string, string> dict = [];
-        foreach (string? key in queryParameters.AllKeys) {
+        foreach (string? key in queryParameters.AllKeys)
+        {
             dict[key!] = queryParameters[key!]!;
         }
         return dict;
     }
-    public static string? FindQueryParameter(string url, string name) {
+    public static string? FindQueryParameter(string url, string name)
+    {
         Dictionary<string, string> dict = QueryParameterDictionary(url);
-        if (dict.ContainsKey(name)) {
+        if (dict.ContainsKey(name))
+        {
             return dict[name];
         }
         return null;
     }
-    public static string RemoveStringSuffix(string input, string suffix) {
-        if (input.EndsWith(suffix)) {
+    public static string RemoveStringSuffix(string input, string suffix)
+    {
+        if (input.EndsWith(suffix))
+        {
             return input.Remove(input.Length - suffix.Length, suffix.Length);
         }
         return input;
     }
-    public static string RemoveSurrogatePair(string str, string replaceSurrogate = "✅") {
+    public static string RemoveSurrogatePair(string str, string replaceSurrogate = "✅")
+    {
         return GeminiSuperTransformer.ReplaceSurrogatePair(str, replaceSurrogate: replaceSurrogate);
     }
-    public static string AdjustFileName(string fileName, string replaceSurrogate = "✅") {
+    public static string AdjustFileName(string fileName, string replaceSurrogate = "✅")
+    {
         return GeminiSuperTransformer.SafeFileName(fileName, replaceSurrogate: replaceSurrogate);
     }
-    public static string AdjustMetaData(string metadata, string replaceSurrogate = "✅") {
+    public static string AdjustMetaData(string metadata, string replaceSurrogate = "✅")
+    {
         return Universal.GeminiSuperTransformer.SafeMetaData(metadata, replaceSurrogate: replaceSurrogate);
     }
-    public static string GetEnv(string name, string fallback = "") {
+    public static string GetEnv(string name, string fallback = "")
+    {
         return Environment.GetEnvironmentVariable(name) ?? fallback;
     }
-    public static void SetEnv(string name, string value) {
+    public static void SetEnv(string name, string value)
+    {
         Environment.SetEnvironmentVariable(name, value);
     }
-    public static string SafeBaseName(string baseName) {
+    public static string SafeBaseName(string baseName)
+    {
         return Universal.GeminiSuperTransformer.SafeBaseName(baseName, followRecommendation: false);
     }
-    public static string HomeFile(params string[] relatives) {
+    public static string HomeFile(params string[] relatives)
+    {
         string home = GetEnv("HOME", "");
-        if (home == "") {
+        if (home == "")
+        {
             home = ProfilePath();
         }
         string result = home;
-        foreach (string x in relatives) {
+        foreach (string x in relatives)
+        {
             string relative = SafeBaseName(x);
             result = Path.Combine(result, relative);
         }
         PrepareForFile(result);
         return result;
     }
-    public static string HomeFolder(params string[] relatives) {
+    public static string HomeFolder(params string[] relatives)
+    {
         string home = GetEnv("HOME", "");
-        if (home == "") {
+        if (home == "")
+        {
             home = ProfilePath();
         }
         string result = home;
-        foreach (string x in relatives) {
+        foreach (string x in relatives)
+        {
             string relative = SafeBaseName(x);
             result = Path.Combine(result, relative);
         }
         Prepare(result);
         return result;
     }
-    public static string? GitProjectFile(string startDir, params string[] relatives) {
+    public static string? GitProjectFile(string startDir, params string[] relatives)
+    {
         string? root = FindGitRoot(startDir);
-        if (root == null) {
+        if (root == null)
+        {
             return null;
         }
         string result = root;
-        foreach (string x in relatives) {
+        foreach (string x in relatives)
+        {
             string relative = SafeBaseName(x);
             result = Path.Combine(result, relative);
         }
         PrepareForFile(result);
         return result;
     }
-    public static string? GitProjectFolder(string startDir, params string[] relatives) {
+    public static string? GitProjectFolder(string startDir, params string[] relatives)
+    {
         string? root = FindGitRoot(startDir);
-        if (root == null) {
+        if (root == null)
+        {
             return null;
         }
         string result = root;
-        foreach (string x in relatives) {
+        foreach (string x in relatives)
+        {
             string relative = SafeBaseName(x);
             result = Path.Combine(result, relative);
         }
@@ -596,8 +728,10 @@ public static partial class GeminiOperatingSystem {
     public static async Task<string> GetResponseString(
         string baseUrl,
         Dictionary<string, string>? queryParameters
-    ) {
-        if (queryParameters == null) {
+    )
+    {
+        if (queryParameters == null)
+        {
             queryParameters = [];
         }
         HttpClient httpClient = new HttpClient();
@@ -607,22 +741,27 @@ public static partial class GeminiOperatingSystem {
         string contents = await response.Content.ReadAsStringAsync();
         return contents;
     }
-    public static void Sleep(int milliseconds) {
+    public static void Sleep(int milliseconds)
+    {
         Thread.Sleep(milliseconds);
     }
     public static void SaveAllLines(
-        string path, IEnumerable<string> lines, string separator = "\n") {
+        string path, IEnumerable<string> lines, string separator = "\n")
+    {
         using StreamWriter writer = new StreamWriter(path);
-        foreach (string line in lines) {
+        foreach (string line in lines)
+        {
             writer.Write(line);
             writer.Write(separator);
         }
     }
-    public static void SaveAllText(string path, string text) {
+    public static void SaveAllText(string path, string text)
+    {
         List<string> lines = TextToLines(text);
         SaveAllLines(path, lines, "\n");
     }
-    public static byte[] ReadFileHeadBytes(string path, int maxSize) {
+    public static byte[] ReadFileHeadBytes(string path, int maxSize)
+    {
         path = CygpathWindows(path);
         var fs = new FileStream(
             path,
@@ -635,30 +774,12 @@ public static partial class GeminiOperatingSystem {
         Array.Copy(array, 0, result, 0, result.Length);
         return result;
     }
-    public static bool IsBinaryFile(string path) {
+    public static bool IsBinaryFile(string path)
+    {
         var head = ReadFileHeadBytes(path, 8000);
         for (var i = 0; i < head.Length; i++)
             if (head[i] == 0)
                 return true;
         return false;
     }
-#if USE_EASY_OBJECT
-        public static void DumpObjectAsJson(
-            object? x,
-            bool compact = false,
-            string newline = "\n",
-            bool keyAsSymbol = false,
-            bool removeSurrogatePair = false) {
-            string json = EasyObject.FromObject(x)
-                .ToJson(
-                indent: !compact,
-                keyAsSymbol: keyAsSymbol,
-                removeSurrogatePair: removeSurrogatePair
-                );
-            Console.Write(json + newline);
-        }
-        public static void Crash(object? message = null, int exitCode = 1) {
-            EasyObject.Abort(message, exitCode);
-        }
-#endif
 }

@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 namespace Universal;
 
-public class GeminPartialHTTPStream : Stream, IDisposable {
+public class GeminiPartialHTTPStream : Stream, IDisposable {
     Stream? stream = null;
     WebResponse? resp = null;
     public string Url {
@@ -51,7 +51,7 @@ public class GeminPartialHTTPStream : Stream, IDisposable {
             return length.Value;
         }
     }
-    public GeminPartialHTTPStream(string url) {
+    public GeminiPartialHTTPStream(string url) {
         var m = GeminiOperatingSystem.FindFirstMatch(
             url,
             @"^(https://github[.]com/[^/]+/[^/]+/)blob(/.+)$",
