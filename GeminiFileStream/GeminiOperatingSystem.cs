@@ -28,14 +28,14 @@ namespace Universal;
 public static partial class GeminiOperatingSystem
 {
     public static bool SilentFlag = false;
-    public static bool IsWindowsPlatform()
-    {
-#if NETFRAMEWORK
-        return Environment.OSVersion.Platform == PlatformID.Win32NT;
-#else
-        return OperatingSystem.IsWindows();
-#endif
-    }
+//    public static bool IsWindowsPlatform()
+//    {
+//#if NETFRAMEWORK
+//        return Environment.OSVersion.Platform == PlatformID.Win32NT;
+//#else
+//        return OperatingSystem.IsWindows();
+//#endif
+//    }
     public static int Add2(int a, int b)
     {
         return a + b;

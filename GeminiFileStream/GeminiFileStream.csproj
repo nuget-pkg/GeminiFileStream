@@ -3,9 +3,8 @@
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
     <LangVersion>latest</LangVersion>
-    <!--<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>-->
-    <TargetFrameworks>net462;net8.0</TargetFrameworks>
-    <Version>2026.0406.0747.55</Version>
+    <TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
+    <Version>2026.0406.2230.37</Version>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -18,9 +17,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <!--<NoWarn></NoWarn>-->
     <!--<PackageTags>json;parser</PackageTags>-->
-    <Authors>JavaCommons;Gemini(Google Large Language Model)</Authors>
+    <Authors>JavaCommons and ❝Gemini (Google Large Language Model)❞</Authors>
     <Company>JavaCommons Technologies</Company>
-    <Copyright>Copyright © JavaCommons Technologies 2026</Copyright>
+    <Copyright>Copyright ©❝Gemini (Google Large Language Model)❞ 2026</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -57,8 +56,8 @@
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.5" />
-	  <PackageReference Include="Universal" Version="2026.406.345.17" />
-	  <PackageReference Include="GeminiZip" Version="2026.406.823.43" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.5" />
+    <PackageReference Include="Universal" Version="2026.406.345.17" />
+    <PackageReference Include="GeminiZip" Version="2026.406.2051.4" />
   </ItemGroup>
 </Project>
