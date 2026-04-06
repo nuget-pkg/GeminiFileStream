@@ -2,20 +2,12 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-namespace Global;
+namespace Universal;
 
-#if GLOBAL_SYS
-public static class TextEmbedder {
-#else
-public static class EasyTextEmbedder {
-#endif
+public static class GeminiTextEmbedder {
     //const long MinimumCheckLength = 8192;
     const long MinimumCheckLength = 512;
-#if GLOBAL_SYS
-    static TextEmbedder() {
-#else
-    static EasyTextEmbedder() {
-#endif
+    static GeminiTextEmbedder() {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     }
     internal class SearchResult {
@@ -32,11 +24,7 @@ public static class EasyTextEmbedder {
     private static long GetLength(string path) {
         try {
             if (path.StartsWith("http:") || path.StartsWith("https:")) {
-#if GLOBAL_SYS
-                using (var fs = new PartialHTTPStream(path)) {
-#else
-                using (var fs = new EasyPartialHTTPStream(path)) {
-#endif
+                using (var fs = new GeminPartialHTTPStream(path)) {
                     return fs.Length;
                 }
             }
@@ -78,11 +66,7 @@ public static class EasyTextEmbedder {
             return new byte[0];
         }
         if (path.StartsWith("http:") || path.StartsWith("https:")) {
-#if GLOBAL_SYS
-            using (var fs = new PartialHTTPStream(path)) {
-#else
-            using (var fs = new EasyPartialHTTPStream(path)) {
-#endif
+            using (var fs = new GeminPartialHTTPStream(path)) {
                 long fileLen = fs.Length;
                 if (size > fileLen) {
                     size = fileLen;
@@ -107,11 +91,7 @@ public static class EasyTextEmbedder {
             return new byte[0];
         }
         if (path.StartsWith("http:") || path.StartsWith("https:")) {
-#if GLOBAL_SYS
-            using (var fs = new PartialHTTPStream(path)) {
-#else
-            using (var fs = new EasyPartialHTTPStream(path)) {
-#endif
+            using (var fs = new GeminPartialHTTPStream(path)) {
                 long fileLen = fs.Length;
                 if (size > fileLen) {
                     size = fileLen;

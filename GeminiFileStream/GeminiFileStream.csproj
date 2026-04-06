@@ -57,6 +57,7 @@
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
+	  <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.5" />
 	  <PackageReference Include="Universal" Version="2026.406.345.17" />
 	  <PackageReference Include="GeminiZip" Version="2026.406.823.43" />
   </ItemGroup>

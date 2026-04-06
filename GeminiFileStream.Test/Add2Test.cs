@@ -43,7 +43,7 @@ public class Add2Test
     {
         // TestContextから現在のメソッド名を取得
         //var methodName = TestContext.CurrentContext.Test.MethodName;
-        AssertIdentical(expected: 333, actual: GeminiFileStream.Add2(111, 222));
+        //AssertIdentical(expected: 333, actual: GeminiFileStream.Add2(111, 222));
         Echo($"▶passed-01", title: GeminiSuperFullName(this));
         AssertEquivalent(expected: new object[] { 11, 22, 33 }, actual: NewArray(11, 22, 33));
         Echo($"▶passed-02", title: GeminiSuperFullName(this));

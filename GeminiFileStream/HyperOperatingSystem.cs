@@ -83,7 +83,7 @@ public static partial class GeminiOperatingSystem {
         }
         if (Directory.Exists(dir) && !string.IsNullOrWhiteSpace(dir) && !string.IsNullOrWhiteSpace(zipout)) {
             try {
-                using var zip = GeminiStorer.Create(zipout, comment); // true for stream
+                using var zip = GeminiZipStorer.Create(zipout, comment); // true for stream
                 zip.EncodeUTF8 = true;
                 zip.ForceDeflating = true;
                 foreach (string listDir in
